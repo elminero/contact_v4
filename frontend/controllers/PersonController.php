@@ -26,6 +26,21 @@ class PersonController extends Controller
         ];
     }
 
+
+    /**
+     * Displays a single Person model.
+     * @return mixed
+     */
+    public function actionList()
+    {
+        $model = new Person();
+
+        //  $model->getNamesWithAddress();
+
+        return $this->render('list', ['namesWithAddress'=>$model->getNamesWithAddress()] );
+    }
+
+
     /**
      * Lists all Person models.
      * @return mixed

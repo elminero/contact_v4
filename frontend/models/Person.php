@@ -134,4 +134,20 @@ class Person extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Picture::className(), ['person_id' => 'id']);
     }
+
+
+    /**
+     * Get all the name with address. The same name will appear for each associated with it.
+     * @return person LEFT OUTER JOIN address
+     */
+    public function getNamesWithAddress() {
+        $sql = "SELECT person.id, person.last_name, person.first_name, person.middle_name, person.alias_name,
+                address.street, address.city, address.state, address.iso, address.postal_code
+                FROM person LEFT OUTER JOIN address
+                ON person.id = address.person_id";
+
+        return  \Yii::$app->db->createCommand($sql)->queryAll();
+    }
+
+
 }
