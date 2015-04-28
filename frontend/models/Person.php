@@ -47,7 +47,7 @@ class Person extends \yii\db\ActiveRecord
             [['live', 'birth_month', 'birth_day', 'birth_year', 'user_id_created'], 'integer'],
             [['note'], 'string'],
             [['date_created', 'date_updated'], 'safe'],
-            [['ip_created'], 'required'],
+//            [['ip_created'], 'required'],
             [['last_name', 'first_name', 'middle_name', 'alias_name'], 'string', 'max' => 30],
             [['ip_created', 'ip_updated'], 'string', 'max' => 50]
         ];
@@ -76,6 +76,32 @@ class Person extends \yii\db\ActiveRecord
             'ip_updated' => 'Ip Updated',
         ];
     }
+
+    /**
+     * Gets the IP Address and date when creating or updating a new record
+     *
+     * @return true before record is created or updated
+     */
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+
+            if($this->isNewRecord) {
+                $this->ip_created = $_SERVER['REMOTE_ADDR'];
+                return true;
+            } elseif(!$this->isNewRecord) {
+                $this->ip_updated = $_SERVER['REMOTE_ADDR'];
+                $this->date_updated = date('Y-m-d H:i:s');
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
+
+
 
     /**
      * @return \yii\db\ActiveQuery
