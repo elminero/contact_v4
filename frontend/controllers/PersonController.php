@@ -67,7 +67,16 @@ class PersonController extends Controller
         return $this->render('portfolio', ['model' => $this->findModel($id), ]);
     }
 
+    public function actionSelect($id)
+    {
+        if( isset($_GET['remove']) ) {
+            $pictureId = (int)$_GET['remove'];
+            $model = new Person();
+            $model->setPictureLiveToZero($pictureId);
+        }
 
+        return $this->render('viewPicturesSelect', ['model' => $this->findModel($id), ]);
+    }
 
     /**
      * Lists all Person models.
