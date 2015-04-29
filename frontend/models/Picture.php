@@ -22,8 +22,22 @@ use Yii;
  *
  * @property Person $person
  */
+
 class Picture extends \yii\db\ActiveRecord
 {
+    // WHERE TO PUT IMAGES
+    const IMAGE_FOLDER = "pictures/";
+
+    // WIDTH OF LARGE IMAGE
+    const LARGE_IMAGE_WIDTH = 800;
+
+    // WIDTH OF THUMB NAIL
+    const THUMB_NAIL_IMAGE_WIDTH = 175;
+
+    protected $imageLocation;
+
+    public $pathToFile;
+
     /**
      * @inheritdoc
      */
@@ -34,11 +48,11 @@ class Picture extends \yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     */
+
     public function rules()
     {
         return [
-            [['person_id', 'file_name', 'ip_created'], 'required'],
+//            [['person_id', 'file_name', 'ip_created'], 'required'],
             [['person_id', 'live', 'avatar', 'user_id_created'], 'integer'],
             [['caption', 'copyright'], 'string'],
             [['date_entered', 'date_updated'], 'safe'],
@@ -46,6 +60,23 @@ class Picture extends \yii\db\ActiveRecord
             [['ip_created', 'ip_updated'], 'string', 'max' => 50]
         ];
     }
+    */
+    public function rules()
+    {
+        return [
+            [['file_name'], 'required'],
+            [['file_name'], 'safe'],
+            [['file_name'], 'file', 'extensions' => 'jpg'],
+            [['person_id', 'live', 'avatar', 'user_id_created'], 'integer'],
+            [['caption', 'copyright'], 'string'],
+            [['date_entered', 'date_updated'], 'safe'],
+            [['file_name'], 'string', 'max' => 60],
+            [['ip_created', 'ip_updated'], 'string', 'max' => 50]
+        ];
+    }
+
+
+
 
     /**
      * @inheritdoc
@@ -68,6 +99,26 @@ class Picture extends \yii\db\ActiveRecord
         ];
     }
 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+
+            if($this->isNewRecord) {
+                $this->ip_created = $_SERVER['REMOTE_ADDR'];
+                $this->live = 1;
+
+                return true;
+            } elseif(!$this->isNewRecord) {
+                $this->ip_updated = $_SERVER['REMOTE_ADDR'];
+                $this->date_updated = date('Y-m-d H:i:s');
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -85,6 +136,76 @@ class Picture extends \yii\db\ActiveRecord
         return $qResult['person_id'];
     }
 
+    public function createImageFolder()
+    {
+        // Create the folders YY/MM/DD/HH
+        $date = explode( "|", date("y|m|d|H") );
+        list($y, $m, $d, $h) = $date;
+        if(!file_exists(self::IMAGE_FOLDER . $y))
+        {
+            mkdir(self::IMAGE_FOLDER . $y);
+        }
+        if(!file_exists(self::IMAGE_FOLDER . $y . "/" . $m))
+        {
+            mkdir(self::IMAGE_FOLDER . $y . "/" . $m);
+        }
+        if(!file_exists(self::IMAGE_FOLDER . $y . "/" .  $m . "/" . $d))
+        {
+            mkdir(self::IMAGE_FOLDER . $y . "/" .  $m . "/" . $d);
+        }
+        if(!file_exists(self::IMAGE_FOLDER . $y . "/" .  $m . "/" . $d . "/" . $h))
+        {
+            mkdir(self::IMAGE_FOLDER . $y . "/" .  $m . "/" . $d . "/" . $h);
+        }
+
+        $this->imageLocation = $y . "/" .  $m . "/" . $d . "/" . $h . "/";
+
+        return $this->imageLocation;
+    }
+
+    public function reduceToFullSize($pathToImageFileFullSize) //     pictures/15/03/12/13/7909df6a.jpg
+    {
+        //Resize the full size image only if original is more than 800 width
+        $imageOriginal = imagecreatefromjpeg($pathToImageFileFullSize);
+        $imageOriginalWidth = imagesx($imageOriginal);
+        if($imageOriginalWidth > self::LARGE_IMAGE_WIDTH)
+        {
+            $imageOriginalHeight = imagesy($imageOriginal);
+
+            // Make the width 800px and find the new height
+            $displayHeight = intval(self::LARGE_IMAGE_WIDTH * $imageOriginalHeight / $imageOriginalWidth);
+
+            $displayImage = imagecreatetruecolor(self::LARGE_IMAGE_WIDTH, $displayHeight);
+
+            imagecopyresampled($displayImage, $imageOriginal, 0, 0, 0, 0, self::LARGE_IMAGE_WIDTH, $displayHeight,
+                $imageOriginalWidth, $imageOriginalHeight);
+
+            imagejpeg($displayImage, $pathToImageFileFullSize);
+        }
+    }
+
+    public function reduceToSmallSize($pathToImageFileSmallSize)
+    {
+        $imageOriginal = imagecreatefromjpeg($pathToImageFileSmallSize);
+        $imageOriginalWidth = imagesx($imageOriginal);
+
+        $imageOriginalHeight = imagesy($imageOriginal);
+
+        // Make the width and find the new height
+        $displayHeight = intval(self::THUMB_NAIL_IMAGE_WIDTH * $imageOriginalHeight / $imageOriginalWidth);
+
+        $displayImage = imagecreatetruecolor(self::THUMB_NAIL_IMAGE_WIDTH, $displayHeight);
+
+        imagecopyresampled($displayImage, $imageOriginal, 0, 0, 0, 0, self::THUMB_NAIL_IMAGE_WIDTH, $displayHeight,
+            $imageOriginalWidth, $imageOriginalHeight);
+
+        imagejpeg($displayImage, $pathToImageFileSmallSize);
+    }
+
+    public function setAvatarToZeroByPersonId($person_id)
+    {
+        \Yii::$app->db->createCommand("UPDATE picture SET avatar=0 WHERE person_id=:person_id")->bindValue(':person_id', $person_id)->execute();
+    }
 
     public function getNextPicture($id)
     {

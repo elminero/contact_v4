@@ -8,36 +8,37 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="picture-form">
+<div class="picture-form" >
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
 
-    <?= $form->field($model, 'person_id')->textInput() ?>
+        //       'type' => ActiveForm::TYPE_HORIZONTAL,
+        //       'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_SMALL],
 
-    <?= $form->field($model, 'live')->textInput() ?>
+        'options' => ['enctype' => 'multipart/form-data', ]]) ?>
 
-    <?= $form->field($model, 'avatar')->textInput() ?>
+    <div class="col-sm-4">
 
-    <?= $form->field($model, 'file_name')->textInput(['maxlength' => 60]) ?>
 
-    <?= $form->field($model, 'caption')->textarea(['rows' => 6]) ?>
+        <?= $form->field($model, 'file_name')->fileInput() ?>
 
-    <?= $form->field($model, 'copyright')->textarea(['rows' => 6]) ?>
+        <?= $form->field($model, 'avatar')->checkbox() ?>
+    </div>
 
-    <?= $form->field($model, 'user_id_created')->textInput() ?>
 
-    <?= $form->field($model, 'date_entered')->textInput() ?>
+    <div class="col-sm-5">
+        <?= $form->field($model, 'caption')->textarea(['rows' => 3]) ?>
 
-    <?= $form->field($model, 'date_updated')->textInput() ?>
+        <?= $form->field($model, 'copyright')->textInput()  ?>
 
-    <?= $form->field($model, 'ip_created')->textInput(['maxlength' => 50]) ?>
+        <div style="float: right">
+            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        </div>
 
-    <?= $form->field($model, 'ip_updated')->textInput(['maxlength' => 50]) ?>
-
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
+
+    <div style="clear: both"></div>
 
 </div>

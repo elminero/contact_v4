@@ -62,12 +62,52 @@ class PictureController extends Controller
     {
         $model = new Picture();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if( isset($_GET['id']) ) {
+
+            $model->person_id = (int)$_GET['id'];
+        }
+
+
+        if ($model->load(Yii::$app->request->post()) ) {
+
+            $path = $model->createImageFolder();
+
+            $randHex = substr(md5(rand()), 0, 8);
+
+            $model->file_name = $path . $randHex;
+
+            $file = \yii\web\UploadedFile::getInstance($model, 'file_name');
+
+            $pathToImageFileFullSize = 'pictures/' . $model->file_name . ".jpg";
+
+            $pathToImageFileSmallSize = 'pictures/' . $model->file_name . "_t.jpg";
+
+            $file->saveAs($pathToImageFileFullSize);
+
+            copy($pathToImageFileFullSize, $pathToImageFileSmallSize);
+
+            $model->reduceToFullSize($pathToImageFileFullSize);
+
+            $model->reduceToSmallSize($pathToImageFileSmallSize);
+
+
+            /*
+             * if avatar was selected, remove any avatar previously selected
+             */
+            if($model->avatar == 1)
+            {
+                $model->setAvatarToZeroByPersonId($model->person_id);
+                $model->save();
+                return $this->redirect(['person/profile', 'id' => $model->person_id]);
+
+            } else
+            {
+                $model->save();
+                return $this->redirect(['person/portfolio', 'id' => $model->person_id]);
+            }
+
         } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            return $this->render('create', ['model' => $model,]);
         }
     }
 
