@@ -55,6 +55,20 @@ class PersonController extends Controller
         return $this->render('profile', ['model' => $this->findModel($id),  'avatar' => $avatar] );
     }
 
+
+
+    /**
+     * Displays a portfolio - picture galley.
+     * @param int $id
+     * @return mixed
+     */
+    public function actionPortfolio($id)
+    {
+        return $this->render('portfolio', ['model' => $this->findModel($id), ]);
+    }
+
+
+
     /**
      * Lists all Person models.
      * @return mixed
