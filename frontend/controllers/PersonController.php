@@ -42,6 +42,20 @@ class PersonController extends Controller
 
 
     /**
+     * Displays a single Profile model.
+     * @param int $id
+     * @return mixed
+     */
+    public function actionProfile($id)
+    {
+        $personModel = new Person();
+
+        $avatar = $personModel->getAvatar($id);
+
+        return $this->render('profile', ['model' => $this->findModel($id),  'avatar' => $avatar] );
+    }
+
+    /**
      * Lists all Person models.
      * @return mixed
      */

@@ -150,4 +150,173 @@ class Person extends \yii\db\ActiveRecord
     }
 
 
+    /**
+     * @return avatar by model person id
+     */
+    public function getAvatar()
+    {
+        return $this->hasOne(Picture::className(), ['person_id' => 'id'])->andHaving('live = 1')->andHaving('avatar = 1');
+    }
+
+
+
+    /**
+     * return $age in years
+     */
+    public function getAge($birth_year, $birth_month, $birth_day)
+    {
+        $birthday = $birth_year . "-" . $birth_month . "-" . $birth_day;
+        $age = date_create($birthday)->diff(date_create('today'))->y;
+        return $age;
+    }
+
+
+
+    /**
+     * return $yearOptions for DOB on form
+     */
+    public function getYearOptions()
+    {
+        $yearMin=(int)date("Y")-120;
+        $yearOptions=array();
+        $yearOptions[0]='Unknown';
+
+        for($year=(int)date("Y"); $year>$yearMin; $year--)
+        {
+            $yearOptions[$year]=(string)$year;
+        }
+
+        return $yearOptions;
+    }
+
+
+    /**
+     * return $dayOptions for DOB on form
+     */
+    public function getDayOptions()
+    {
+        $dayOptions=array();
+        $dayOptions[0]='Unknown';
+
+        for($day=1; $day<=31; $day++)
+        {
+            $dayOptions[$day]=(string)$day;
+        }
+
+        return $dayOptions;
+    }
+
+
+    /**
+     * return $month for DOB on form
+     */
+    public function getMonthOptions()
+    {
+        return $month = array(
+            0=>'Unknown',
+            1=>'January',
+            2=>'February',
+            3=>'March',
+            4=>'April',
+            5=>'May',
+            6=>'June',
+            7=>'July',
+            8=>'August',
+            9=>'September',
+            10=>'October',
+            11=>'November',
+            12=>'December'
+        );
+    }
+
+
+
+    function getMonthNameByNumber($monthNumber)
+    {
+        switch($monthNumber)
+        {
+            case 0:
+                $month = " ";
+                break;
+            case 1:
+                $month = "January";
+                break;
+            case 2:
+                $month = "February";
+                break;
+            case 3:
+                $month = "March";
+                break;
+            case 4:
+                $month = "April";
+                break;
+            case 5:
+                $month = "May";
+                break;
+            case 6:
+                $month = "June";
+                break;
+            case 7:
+                $month = "July";
+                break;
+            case 8:
+                $month = "August";
+                break;
+            case 9:
+                $month = "September";
+                break;
+            case 10:
+                $month = "October";
+                break;
+            case 11:
+                $month = "November";
+                break;
+            case 12:
+                $month = "December";
+                break;
+            default:
+                $month = null;
+        }
+        return $month;
+    }
+
+    public function getAddressTypeByNumber($addressTypeNumber)
+    {
+        switch($addressTypeNumber)
+        {
+            case 0:
+                $addressType = " ";
+                break;
+            case 1:
+                $addressType = "Current Street";
+                break;
+            case 2:
+                $addressType = "Current Mailing";
+                break;
+            case 3:
+                $addressType = "Previous Street";
+                break;
+            case 4:
+                $addressType = "Previous Mailing";
+                break;
+            case 5:
+                $addressType = "Current Crash Pad";
+                break;
+            case 6:
+                $addressType = "Previous Crash Pad";
+                break;
+            case 7:
+                $addressType = "Other";
+                break;
+            default:
+                $month = null;
+        }
+
+        return $addressType;
+    }
+
+
+
+
+
 }
