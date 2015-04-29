@@ -19,8 +19,9 @@ use yii\widgets\ActiveForm;
 
     <div class="col-sm-4">
 
-
+        <?php if($model->isNewRecord): ?>
         <?= $form->field($model, 'file_name')->fileInput() ?>
+        <?php endif ?>
 
         <?= $form->field($model, 'avatar')->checkbox() ?>
     </div>

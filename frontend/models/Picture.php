@@ -52,7 +52,7 @@ class Picture extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-//            [['person_id', 'file_name', 'ip_created'], 'required'],
+            [['person_id', 'file_name', 'ip_created'], 'required'],
             [['person_id', 'live', 'avatar', 'user_id_created'], 'integer'],
             [['caption', 'copyright'], 'string'],
             [['date_entered', 'date_updated'], 'safe'],

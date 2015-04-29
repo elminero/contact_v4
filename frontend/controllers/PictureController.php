@@ -121,12 +121,22 @@ class PictureController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+
+            if ($model->avatar) {
+                $model->setAvatarToZeroByPersonId($model->person_id);
+            }
+
+            $model->save();
+
+            if ($model->avatar) {
+                return $this->redirect(['person/profile', 'id' => $model->person_id]);
+            }
+
+            return $this->redirect(['person/select', 'id' => $model->person_id]);
         } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+
+            return $this->render('update', ['model' => $model,]);
         }
     }
 
