@@ -103,6 +103,16 @@ class PictureController extends Controller
         return $this->redirect(['index']);
     }
 
+
+    public function actionDisplay($id)
+    {
+        $model = new Picture();
+
+        return $this->render('display', ['model' => $this->findModel($id),
+            'previous' => $model->getPreviousPicture($id),
+            'next' => $model->getNextPicture($id) ]);
+    }
+
     /**
      * Finds the Picture model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

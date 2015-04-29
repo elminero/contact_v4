@@ -75,4 +75,52 @@ class Picture extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Person::className(), ['id' => 'person_id']);
     }
+
+
+    public function getPersonIdByPictureId ($id)
+    {
+        $sql = "SELECT person_id FROM picture WHERE id = " . $id;
+        $qResult = \Yii::$app->db->createCommand($sql)->queryOne();
+
+        return $qResult['person_id'];
+    }
+
+
+    public function getNextPicture($id)
+    {
+        $personId = self::getPersonIdByPictureId($id);
+
+        $sql = "SELECT id FROM picture WHERE person_id= " . $personId . " AND id > " . $id . " AND live=1";
+        $qResult =\Yii::$app->db->createCommand($sql)->queryOne();
+
+        if($qResult) {
+            $next = $qResult['id'];
+        } else {
+            $sql = "SELECT MIN(id) AS id  FROM picture WHERE person_id =  " . $personId;
+            $qResult =\Yii::$app->db->createCommand($sql)->queryOne();
+            $next = $qResult['id'];
+        }
+
+        return $next;
+    }
+
+
+    public function getPreviousPicture($id)
+    {
+        $personId = self::getPersonIdByPictureId($id);
+
+        $sql = "SELECT id FROM picture WHERE person_id= " . $personId . " AND id < " . $id . " AND live=1 ORDER BY id DESC";
+        $qResult =\Yii::$app->db->createCommand($sql)->queryOne();
+
+        if($qResult) {
+            $previous = $qResult['id'];
+        } else {
+            $sql = "SELECT MAX(id) AS id  FROM picture WHERE person_id =  " . $personId;
+            $qResult =\Yii::$app->db->createCommand($sql)->queryOne();
+            $previous = $qResult['id'];
+        }
+
+        return $previous;
+    }
+
 }
