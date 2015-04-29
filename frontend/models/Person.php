@@ -309,7 +309,7 @@ class Person extends \yii\db\ActiveRecord
                 $addressType = "Other";
                 break;
             default:
-                $month = null;
+                $addressType = null;
         }
 
         return $addressType;

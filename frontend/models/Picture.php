@@ -66,7 +66,7 @@ class Picture extends \yii\db\ActiveRecord
         return [
             [['file_name'], 'required'],
             [['file_name'], 'safe'],
-            [['file_name'], 'file', 'extensions' => 'jpg', 'maxSize' => 500000],
+            [['file_name'], 'file', 'extensions' => 'jpg', 'maxSize' => 800000],
             [['person_id', 'live', 'avatar', 'user_id_created'], 'integer'],
             [['caption', 'copyright'], 'string'],
             [['date_entered', 'date_updated'], 'safe'],

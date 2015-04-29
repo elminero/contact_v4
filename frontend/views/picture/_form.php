@@ -33,7 +33,7 @@ use yii\widgets\ActiveForm;
         <?= $form->field($model, 'copyright')->textInput()  ?>
 
         <div style="float: right">
-            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= Html::submitButton($model->isNewRecord ? 'Upload' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>
 
     </div>
