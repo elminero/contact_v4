@@ -37,7 +37,7 @@ class PhoneNumber extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['person_id', 'phone', 'ip_created'], 'required'],
+            [['phone'], 'required'],
             [['person_id', 'live', 'type', 'user_id_created'], 'integer'],
             [['note'], 'string'],
             [['date_entered', 'date_updated'], 'safe'],
@@ -45,6 +45,25 @@ class PhoneNumber extends \yii\db\ActiveRecord
             [['ip_created', 'ip_updated'], 'string', 'max' => 50]
         ];
     }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+
+            if($this->isNewRecord) {
+                $this->ip_created = $_SERVER['REMOTE_ADDR'];
+                return true;
+            } elseif(!$this->isNewRecord) {
+                $this->ip_updated = $_SERVER['REMOTE_ADDR'];
+                $this->date_updated = date('Y-m-d H:i:s');
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
 
     /**
      * @inheritdoc

@@ -6,8 +6,9 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model frontend\models\PhoneNumber */
 
-$this->title = 'Create Phone Number';
-$this->params['breadcrumbs'][] = ['label' => 'Phone Numbers', 'url' => ['index']];
+$this->title = 'Add a Phone Number: ' . ' ' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'List', 'url' => ['person/list']];
+$this->params['breadcrumbs'][] = ['label' => "Profile " . $model->person_id, 'url' => ['person/profile', 'id' => $model->person_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="phone-number-create">

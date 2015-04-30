@@ -62,8 +62,15 @@ class PhoneNumberController extends Controller
     {
         $model = new PhoneNumber();
 
+        if( isset($_GET['id']) ) {
+            $model->person_id = (int)$_GET['id'];
+        }
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+
+
+
+            return $this->redirect(['person/profile', 'id' => $model->person_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -82,7 +89,7 @@ class PhoneNumberController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['person/profile', 'id' => $model->person_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
