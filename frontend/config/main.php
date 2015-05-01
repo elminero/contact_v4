@@ -25,6 +25,12 @@ return [
                 ],
             ],
         ],
+/*
+        'authManager' => [
+           'class' => '\yii\rbac\PhpManager',
+           'defaultRoles' => ['guest'],
+        ],
+*/
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],

@@ -8,10 +8,16 @@ return [
             'password' => 'super1964',
             'charset' => 'utf8',
         ],
-        'user' => [
-            'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
+
+        'authManager' => [
+            'class' => '\yii\rbac\DbManager',
+            'defaultRoles' => ['guest'],
         ],
+
+ //       'user' => [
+  //          'identityClass' => 'app\models\User',
+  //          'enableAutoLogin' => true,
+  //      ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             'viewPath' => '@common/mail',
