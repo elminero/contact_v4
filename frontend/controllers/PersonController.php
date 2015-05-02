@@ -34,11 +34,16 @@ class PersonController extends Controller
      */
     public function actionList()
     {
-        $model = new Person();
+        if( Yii::$app->user->can('person-list') ) {
 
-        //  $model->getNamesWithAddress();
+            $model = new Person();
 
-        return $this->render('list', ['namesWithAddress'=>$model->getNamesWithAddress()] );
+            return $this->render('list', ['namesWithAddress'=>$model->getNamesWithAddress()] );
+
+        }else {
+            throw new ForbiddenHttpException;
+        }
+
     }
 
 
@@ -49,11 +54,17 @@ class PersonController extends Controller
      */
     public function actionProfile($id)
     {
-        $personModel = new Person();
+        if( Yii::$app->user->can('person-profile') ) {
 
-        $avatar = $personModel->getAvatar($id);
+            $personModel = new Person();
 
-        return $this->render('profile', ['model' => $this->findModel($id),  'avatar' => $avatar] );
+            $avatar = $personModel->getAvatar($id);
+
+            return $this->render('profile', ['model' => $this->findModel($id),  'avatar' => $avatar] );
+
+        }else {
+            throw new ForbiddenHttpException;
+        }
     }
 
 
@@ -65,18 +76,31 @@ class PersonController extends Controller
      */
     public function actionPortfolio($id)
     {
-        return $this->render('portfolio', ['model' => $this->findModel($id), ]);
+        if( Yii::$app->user->can('person-portfolio') ) {
+
+            return $this->render('portfolio', ['model' => $this->findModel($id), ]);
+
+        }else {
+            throw new ForbiddenHttpException;
+        }
+
     }
 
     public function actionSelect($id)
     {
-        if( isset($_GET['remove']) ) {
-            $pictureId = (int)$_GET['remove'];
-            $model = new Person();
-            $model->setPictureLiveToZero($pictureId);
-        }
+        if( Yii::$app->user->can('person-select') ) {
 
-        return $this->render('viewPicturesSelect', ['model' => $this->findModel($id), ]);
+            if( isset($_GET['remove']) ) {
+                $pictureId = (int)$_GET['remove'];
+                $model = new Person();
+                $model->setPictureLiveToZero($pictureId);
+            }
+
+            return $this->render('viewPicturesSelect', ['model' => $this->findModel($id), ]);
+
+        }else {
+            throw new ForbiddenHttpException;
+        }
     }
 
     /**
@@ -108,14 +132,13 @@ class PersonController extends Controller
 
     /**
      * Creates a new Person model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
+     * If creation is successful, the browser will be redirected to the 'profile' page.
      * @return mixed
      */
     public function actionCreate()
     {
+        if( Yii::$app->user->can('person-create') ) {
 
-        if( Yii::$app->user->can('create-person') )
-        {
             $model = new Person();
 
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -126,12 +149,9 @@ class PersonController extends Controller
                 ]);
             }
 
-
-        }else
-        {
-            throw new ForbiddenHttpException;
+        }else {
+           throw new ForbiddenHttpException;
         }
-
 
     }
 
