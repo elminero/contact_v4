@@ -6,6 +6,7 @@ use Yii;
 use frontend\models\Person;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -112,15 +113,26 @@ class PersonController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Person();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['profile', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        if( Yii::$app->user->can('create-person') )
+        {
+            $model = new Person();
+
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['profile', 'id' => $model->id]);
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
+
+
+        }else
+        {
+            throw new ForbiddenHttpException;
         }
+
+
     }
 
     /**
