@@ -6,6 +6,7 @@ use Yii;
 use frontend\models\PhoneNumber;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -32,13 +33,19 @@ class PhoneNumberController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => PhoneNumber::find(),
-        ]);
+        if( Yii::$app->user->can('phone-number-index') ) {
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
+            $dataProvider = new ActiveDataProvider([
+                'query' => PhoneNumber::find(),
+            ]);
+
+            return $this->render('index', [
+                'dataProvider' => $dataProvider,
+            ]);
+
+        }else {
+            throw new ForbiddenHttpException;
+        }
     }
 
     /**
@@ -48,9 +55,15 @@ class PhoneNumberController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if( Yii::$app->user->can('phone-number-view') ) {
+
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+
+        }else {
+            throw new ForbiddenHttpException;
+        }
     }
 
     /**
@@ -60,21 +73,24 @@ class PhoneNumberController extends Controller
      */
     public function actionCreate()
     {
-        $model = new PhoneNumber();
+        if( Yii::$app->user->can('phone-number-create') ) {
 
-        if( isset($_GET['id']) ) {
-            $model->person_id = (int)$_GET['id'];
-        }
+            $model = new PhoneNumber();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if( isset($_GET['id']) ) {
+                $model->person_id = (int)$_GET['id'];
+            }
 
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['person/profile', 'id' => $model->person_id]);
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
 
-
-            return $this->redirect(['person/profile', 'id' => $model->person_id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        }else {
+            throw new ForbiddenHttpException;
         }
     }
 
@@ -86,14 +102,20 @@ class PhoneNumberController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if( Yii::$app->user->can('phone-number-update') ) {
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['person/profile', 'id' => $model->person_id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            $model = $this->findModel($id);
+
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['person/profile', 'id' => $model->person_id]);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
+
+        }else {
+            throw new ForbiddenHttpException;
         }
     }
 
@@ -105,9 +127,15 @@ class PhoneNumberController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if( Yii::$app->user->can('phone-number-delete') ) {
 
-        return $this->redirect(['index']);
+            $this->findModel($id)->delete();
+
+            return $this->redirect(['index']);
+
+        }else {
+            throw new ForbiddenHttpException;
+        }
     }
 
     /**
