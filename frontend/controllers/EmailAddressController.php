@@ -6,6 +6,7 @@ use Yii;
 use frontend\models\EmailAddress;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -32,13 +33,19 @@ class EmailAddressController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => EmailAddress::find(),
-        ]);
+        if( Yii::$app->user->can('email-address-index') ) {
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
+            $dataProvider = new ActiveDataProvider([
+                'query' => EmailAddress::find(),
+            ]);
+
+            return $this->render('index', [
+                'dataProvider' => $dataProvider,
+            ]);
+
+        }else {
+            throw new ForbiddenHttpException;
+        }
     }
 
     /**
@@ -48,9 +55,16 @@ class EmailAddressController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if( Yii::$app->user->can('email-address-view') ) {
+
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+
+        }else {
+            throw new ForbiddenHttpException;
+        }
+
     }
 
     /**
@@ -60,18 +74,24 @@ class EmailAddressController extends Controller
      */
     public function actionCreate()
     {
-        $model = new EmailAddress();
+        if( Yii::$app->user->can('email-address-create') ) {
 
-        if( isset($_GET['id']) ) {
-            $model->person_id = (int)$_GET['id'];
-        }
+            $model = new EmailAddress();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['person/profile', 'id' => $model->person_id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            if( isset($_GET['id']) ) {
+                $model->person_id = (int)$_GET['id'];
+            }
+
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['person/profile', 'id' => $model->person_id]);
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
+
+        }else {
+            throw new ForbiddenHttpException;
         }
     }
 
@@ -83,14 +103,18 @@ class EmailAddressController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if( Yii::$app->user->can('email-address-update') ) {
+            $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['person/profile', 'id' => $model->person_id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['person/profile', 'id' => $model->person_id]);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
+        }else {
+            throw new ForbiddenHttpException;
         }
     }
 
@@ -102,9 +126,15 @@ class EmailAddressController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if( Yii::$app->user->can('email-address-delete') ) {
 
-        return $this->redirect(['index']);
+            $this->findModel($id)->delete();
+
+            return $this->redirect(['index']);
+
+        }else {
+            throw new ForbiddenHttpException;
+        }
     }
 
     /**
