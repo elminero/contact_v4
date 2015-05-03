@@ -6,6 +6,7 @@ use Yii;
 use frontend\models\Address;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -32,13 +33,17 @@ class AddressController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Address::find(),
-        ]);
+        if( Yii::$app->user->can('address-index') ) {
+            $dataProvider = new ActiveDataProvider([
+                'query' => Address::find(),
+            ]);
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'dataProvider' => $dataProvider,
+            ]);
+        }else {
+            throw new ForbiddenHttpException;
+        }
     }
 
     /**
@@ -48,9 +53,14 @@ class AddressController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if( Yii::$app->user->can('address-view') ) {
+
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        }else {
+            throw new ForbiddenHttpException;
+        }
     }
 
     /**
@@ -60,16 +70,22 @@ class AddressController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Address();
+        if( Yii::$app->user->can('address-create') ) {
 
-        if( isset($_GET['id']) ) {
-            $model->person_id = (int)$_GET['id'];
-        }
+            $model = new Address();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['person/profile', 'id' => $model->person_id]);
-        } else {
-            return $this->render('create', ['model' => $model,]);
+            if( isset($_GET['id']) ) {
+                $model->person_id = (int)$_GET['id'];
+            }
+
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['person/profile', 'id' => $model->person_id]);
+            } else {
+                return $this->render('create', ['model' => $model,]);
+            }
+
+        }else {
+            throw new ForbiddenHttpException;
         }
     }
 
@@ -81,12 +97,18 @@ class AddressController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if( Yii::$app->user->can('address-update') ) {
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['person/profile', 'id' => $model->person_id]);
-        } else {
-            return $this->render('update', ['model' => $model,]);
+            $model = $this->findModel($id);
+
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['person/profile', 'id' => $model->person_id]);
+            } else {
+                return $this->render('update', ['model' => $model,]);
+            }
+
+        }else {
+            throw new ForbiddenHttpException;
         }
     }
 
@@ -98,9 +120,15 @@ class AddressController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if( Yii::$app->user->can('address-index') ) {
 
-        return $this->redirect(['index']);
+            $this->findModel($id)->delete();
+
+            return $this->redirect(['index']);
+
+        }else {
+            throw new ForbiddenHttpException;
+        }
     }
 
     /**
