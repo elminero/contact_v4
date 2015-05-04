@@ -88,8 +88,8 @@ $nameDOB .= "Note: " . $model->note;
     $this->params['breadcrumbs'][] = ['label' => $this->title ];
 
     $this->params['breadcrumbs'][] = ['label' => 'delete', 'url' => ['person/remove' , 'id' => $model->id ],
-        'template' => '<li style="float: right;">{link}</li>'
-];
+        'template' => '<li style="float: right;">{link}</li>'];
+
 
     ?>
 
