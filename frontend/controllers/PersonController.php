@@ -47,6 +47,14 @@ class PersonController extends Controller
     }
 
 
+    public function actionRemove($id)
+    {
+        $model = new person();
+        $model->setPersonLiveToZero($id);
+
+        return $this->redirect(['person/list']);
+    }
+
     /**
      * Displays a single Profile model.
      * @param int $id

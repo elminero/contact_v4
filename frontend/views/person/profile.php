@@ -86,7 +86,13 @@ $nameDOB .= "Note: " . $model->note;
 
     $this->params['breadcrumbs'][] = ['label' => 'List', 'url' => ['list']];
     $this->params['breadcrumbs'][] = ['label' => $this->title ];
+
+    $this->params['breadcrumbs'][] = ['label' => 'delete', 'url' => ['person/remove' , 'id' => $model->id ],
+        'template' => '<li style="float: right;">{link}</li>'
+];
+
     ?>
+
 </div><!--End BreadCrumbs div 1-->
 
 
@@ -140,7 +146,6 @@ $nameDOB .= "Note: " . $model->note;
 
     </div>
 
-
     <div class="col-lg-2">
         <h4>
             <?php
@@ -176,7 +181,6 @@ $nameDOB .= "Note: " . $model->note;
             ?>
         </p>
     </div>
-
 
     <div style="clear: both"></div>
 

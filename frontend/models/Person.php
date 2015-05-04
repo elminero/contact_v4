@@ -102,6 +102,11 @@ class Person extends \yii\db\ActiveRecord
     }
 
 
+    public function setPersonLiveToZero ($id)
+    {
+        $sql = "UPDATE person SET live = 0 WHERE id = " . $id;
+        $qResult =  \Yii::$app->db->createCommand($sql)->execute();
+    }
 
 
     /**
