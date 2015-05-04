@@ -141,8 +141,8 @@ class PersonController extends Controller
 
             $model = new Person();
 
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['profile', 'id' => $model->id]);
+            if ($model->load( Yii::$app->request->post()) && $model->save() ) {
+                    return $this->redirect(['profile', 'id' => $model->id]);
             } else {
                 return $this->render('create', [
                     'model' => $model,

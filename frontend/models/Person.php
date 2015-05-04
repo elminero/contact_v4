@@ -88,6 +88,7 @@ class Person extends \yii\db\ActiveRecord
 
             if($this->isNewRecord) {
                 $this->ip_created = $_SERVER['REMOTE_ADDR'];
+                $this->live = 1;
                 return true;
             } elseif(!$this->isNewRecord) {
                 $this->ip_updated = $_SERVER['REMOTE_ADDR'];
@@ -108,7 +109,7 @@ class Person extends \yii\db\ActiveRecord
      */
     public function getAddresses()
     {
-        return $this->hasMany(Address::className(), ['person_id' => 'id']);
+        return $this->hasMany(Address::className(), ['person_id' => 'id'])->andHaving('live = 1');
     }
 
     /**
@@ -116,7 +117,7 @@ class Person extends \yii\db\ActiveRecord
      */
     public function getEmailAddresses()
     {
-        return $this->hasMany(EmailAddress::className(), ['person_id' => 'id']);
+        return $this->hasMany(EmailAddress::className(), ['person_id' => 'id'])->andHaving('live = 1');
     }
 
     /**
@@ -124,7 +125,7 @@ class Person extends \yii\db\ActiveRecord
      */
     public function getPhoneNumbers()
     {
-        return $this->hasMany(PhoneNumber::className(), ['person_id' => 'id']);
+        return $this->hasMany(PhoneNumber::className(), ['person_id' => 'id'])->andHaving('live = 1');
     }
 
     /**
@@ -132,7 +133,7 @@ class Person extends \yii\db\ActiveRecord
      */
     public function getPictures()
     {
-        return $this->hasMany(Picture::className(), ['person_id' => 'id']);
+        return $this->hasMany(Picture::className(), ['person_id' => 'id'])->andHaving('live = 1');
     }
 
 
@@ -144,7 +145,8 @@ class Person extends \yii\db\ActiveRecord
         $sql = "SELECT person.id, person.last_name, person.first_name, person.middle_name, person.alias_name,
                 address.street, address.city, address.state, address.iso, address.postal_code
                 FROM person LEFT OUTER JOIN address
-                ON person.id = address.person_id";
+                ON person.id = address.person_id
+                WHERE person.live = 1";
 
         return  \Yii::$app->db->createCommand($sql)->queryAll();
     }

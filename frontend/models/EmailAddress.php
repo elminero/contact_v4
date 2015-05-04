@@ -53,6 +53,7 @@ class EmailAddress extends \yii\db\ActiveRecord
 
             if($this->isNewRecord) {
                 $this->ip_created = $_SERVER['REMOTE_ADDR'];
+                $this->live = 1;
                 return true;
             } elseif(!$this->isNewRecord) {
                 $this->ip_updated = $_SERVER['REMOTE_ADDR'];

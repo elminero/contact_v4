@@ -13,22 +13,13 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'live')->textInput() ?>
-
     <?= $form->field($model, 'last_name')->textInput(['maxlength' => 30]) ?>
 
     <?= $form->field($model, 'first_name')->textInput(['maxlength' => 30]) ?>
 
     <?= $form->field($model, 'middle_name')->textInput(['maxlength' => 30]) ?>
 
-
-
-
     <?= $form->field($model, 'alias_name')->textInput(['maxlength' => 30] ) ?>
-
-
-
-
 
     <?= $form->field($model, 'birth_month')->dropDownList( $model->getMonthOptions()) ?>
 
@@ -37,8 +28,6 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'birth_year')->dropDownList( $model->getYearOptions(), array('width'=>30) ) ?>
 
     <?= $form->field($model, 'note')->textarea(['rows' => 6]) ?>
-
-
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
