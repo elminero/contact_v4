@@ -125,6 +125,12 @@ class Picture extends \yii\db\ActiveRecord
         return $this->hasOne(Person::className(), ['id' => 'person_id']);
     }
 
+    public function setPictureLiveToZero ($id)
+    {
+        $sql = "UPDATE picture SET live = 0 WHERE id = " . $id;
+        $qResult =  \Yii::$app->db->createCommand($sql)->execute();
+    }
+
 
     public function getPersonIdByPictureId ($id)
     {

@@ -52,7 +52,7 @@ foreach( $model->pictures as $picture ): ?>
             <div style="float: right">
 
                 <?php
-                echo Html::a('delete',['person/select', 'id' => $picture->person_id, 'remove' => $picture->id],  ['class' => '']);
+                echo Html::a('delete',['picture/remove', 'id' => $picture->id],  ['class' => '']);
                 ?>
 
             </div>

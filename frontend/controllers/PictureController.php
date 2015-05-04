@@ -175,6 +175,14 @@ class PictureController extends Controller
         }
     }
 
+    public function actionRemove($id)
+    {
+        $model = new Picture();
+        $model->setPictureLiveToZero($id);
+
+        return $this->redirect(['person/select', 'id' => $model->getPersonIdByPictureId($id)]);
+    }
+
 
     public function actionDisplay($id)
     {
