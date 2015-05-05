@@ -86,6 +86,21 @@ class PhoneNumber extends \yii\db\ActiveRecord
         ];
     }
 
+    public function setPhoneNumberLiveToZero ($id)
+    {
+        $sql = "UPDATE phone_number SET live = 0 WHERE id = " . $id;
+        $qResult =  \Yii::$app->db->createCommand($sql)->execute();
+    }
+
+    public function getPersonIdByPhoneId ($id)
+    {
+        $sql = "SELECT person_id FROM phone_number WHERE id = " . $id;
+        $qResult =  \Yii::$app->db->createCommand($sql)->queryOne();
+
+        return $qResult['person_id'];
+    }
+
+
     /**
      * @return \yii\db\ActiveQuery
      */

@@ -138,6 +138,16 @@ class PhoneNumberController extends Controller
         }
     }
 
+
+    public function actionRemove($id)
+    {
+        $model = new PhoneNumber();
+        $model->setPhoneNumberLiveToZero($id);
+
+        return $this->redirect(['person/profile', 'id' => $model->getPersonIdByPhoneId($id)]);
+    }
+
+
     /**
      * Finds the PhoneNumber model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
