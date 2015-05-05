@@ -131,6 +131,17 @@ class AddressController extends Controller
         }
     }
 
+
+    public function actionRemove($id)
+    {
+        $model = new Address();
+        $model->setAddressLiveToZero($id);
+
+        return $this->redirect(['person/profile', 'id' => $model->getPersonIdByAddressId($id)]);
+    }
+
+
+
     /**
      * Finds the Address model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

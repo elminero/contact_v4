@@ -94,6 +94,21 @@ class Address extends \yii\db\ActiveRecord
         ];
     }
 
+    public function setAddressLiveToZero ($id)
+    {
+        $sql = "UPDATE address SET live = 0 WHERE id = " . $id;
+        $qResult =  \Yii::$app->db->createCommand($sql)->execute();
+    }
+
+    public function getPersonIdByAddressId ($id)
+    {
+        $sql = "SELECT person_id FROM address WHERE id = " . $id;
+        $qResult =  \Yii::$app->db->createCommand($sql)->queryOne();
+
+        return $qResult['person_id'];
+    }
+
+
     /**
      * @return \yii\db\ActiveQuery
      */

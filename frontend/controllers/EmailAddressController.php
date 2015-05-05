@@ -142,7 +142,7 @@ class EmailAddressController extends Controller
     {
         $model = new EmailAddress();
         $model->setEmailAddressLiveToZero($id);
-        
+
         return $this->redirect(['person/profile', 'id' => $model->getPersonIdByEmailAddressId($id)]);
     }
 
