@@ -134,10 +134,14 @@ class AddressController extends Controller
 
     public function actionRemove($id)
     {
-        $model = new Address();
-        $model->setAddressLiveToZero($id);
+        if( Yii::$app->user->can('address-remove') ) {
+            $model = new Address();
+            $model->setAddressLiveToZero($id);
 
-        return $this->redirect(['person/profile', 'id' => $model->getPersonIdByAddressId($id)]);
+            return $this->redirect(['person/profile', 'id' => $model->getPersonIdByAddressId($id)]);
+        }else {
+            throw new ForbiddenHttpException;
+        }
     }
 
 

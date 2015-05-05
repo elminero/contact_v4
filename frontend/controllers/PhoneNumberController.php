@@ -141,10 +141,15 @@ class PhoneNumberController extends Controller
 
     public function actionRemove($id)
     {
-        $model = new PhoneNumber();
-        $model->setPhoneNumberLiveToZero($id);
+        if( Yii::$app->user->can('phone-number-remove') ) {
 
-        return $this->redirect(['person/profile', 'id' => $model->getPersonIdByPhoneId($id)]);
+            $model = new PhoneNumber();
+            $model->setPhoneNumberLiveToZero($id);
+
+            return $this->redirect(['person/profile', 'id' => $model->getPersonIdByPhoneId($id)]);
+        }else {
+            throw new ForbiddenHttpException;
+        }
     }
 
 

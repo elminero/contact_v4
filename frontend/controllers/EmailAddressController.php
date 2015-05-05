@@ -140,10 +140,15 @@ class EmailAddressController extends Controller
 
     public function actionRemove($id)
     {
-        $model = new EmailAddress();
-        $model->setEmailAddressLiveToZero($id);
+        if( Yii::$app->user->can('email-address-remove') ) {
 
-        return $this->redirect(['person/profile', 'id' => $model->getPersonIdByEmailAddressId($id)]);
+            $model = new EmailAddress();
+            $model->setEmailAddressLiveToZero($id);
+
+            return $this->redirect(['person/profile', 'id' => $model->getPersonIdByEmailAddressId($id)]);
+        }else {
+            throw new ForbiddenHttpException;
+        }
     }
 
 

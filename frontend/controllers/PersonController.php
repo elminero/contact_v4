@@ -49,10 +49,15 @@ class PersonController extends Controller
 
     public function actionRemove($id)
     {
-        $model = new person();
-        $model->setPersonLiveToZero($id);
+        if( Yii::$app->user->can('person-remove') ) {
+            $model = new person();
+            $model->setPersonLiveToZero($id);
 
-        return $this->redirect(['person/list']);
+            return $this->redirect(['person/list']);
+
+        }else {
+            throw new ForbiddenHttpException;
+        }
     }
 
     /**

@@ -177,10 +177,15 @@ class PictureController extends Controller
 
     public function actionRemove($id)
     {
-        $model = new Picture();
-        $model->setPictureLiveToZero($id);
+        if( Yii::$app->user->can('picture-remove') ) {
 
-        return $this->redirect(['person/select', 'id' => $model->getPersonIdByPictureId($id)]);
+            $model = new Picture();
+            $model->setPictureLiveToZero($id);
+
+            return $this->redirect(['person/select', 'id' => $model->getPersonIdByPictureId($id)]);
+        }else {
+            throw new ForbiddenHttpException;
+        }
     }
 
 
