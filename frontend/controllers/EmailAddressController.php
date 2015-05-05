@@ -137,6 +137,17 @@ class EmailAddressController extends Controller
         }
     }
 
+
+    public function actionRemove($id)
+    {
+        $model = new EmailAddress();
+        $model->setEmailAddressLiveToZero($id);
+        
+        return $this->redirect(['person/profile', 'id' => $model->getPersonIdByEmailAddressId($id)]);
+    }
+
+
+
     /**
      * Finds the EmailAddress model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

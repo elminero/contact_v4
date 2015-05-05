@@ -93,4 +93,21 @@ class EmailAddress extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Person::className(), ['id' => 'person_id']);
     }
+
+
+    public function setEmailAddressLiveToZero ($id)
+    {
+        $sql = "UPDATE email_address SET live = 0 WHERE id = " . $id;
+        $qResult =  \Yii::$app->db->createCommand($sql)->execute();
+    }
+
+    public function getPersonIdByEmailAddressId ($id)
+    {
+        $sql = "SELECT person_id FROM email_address WHERE id = " . $id;
+        $qResult =  \Yii::$app->db->createCommand($sql)->queryOne();
+
+        return $qResult['person_id'];
+    }
+
+
 }
