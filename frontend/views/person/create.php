@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /* @var $model app\models\Person */
 
 $this->title = 'Create a New Contact';
-$this->params['breadcrumbs'][] = ['label' => 'People', 'url' => ['index']];
+// $this->params['breadcrumbs'][] = ['label' => 'People', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="person-create">
