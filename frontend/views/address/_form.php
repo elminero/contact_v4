@@ -5,11 +5,12 @@
 
 
 use yii\helpers\ArrayHelper;
+use frontend\models\Address;
 use yii\base\InvalidConfigException;
-use kartik\base\Config;
-use kartik\select2\Select2;
+//use kartik\base\Config;
+//use kartik\select2\Select2;
 
-use kartik\widgets\DepDrop;
+//use kartik\widgets\DepDrop;
 
 
 
@@ -23,13 +24,24 @@ use yii\widgets\ActiveForm;
 
 <div class="address-form">
 
+
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'type')->textInput() ?>
 
-    <?= $form->field($model, 'iso')->textInput(['maxlength' => 2]) ?>
+    <?= $form->field($model, 'iso')->dropDownList(
+                            $model->getCountries(),
+                            [
+                                'prompt'=>'Select Country',
 
-    <?= $form->field($model, 'state')->textInput(['maxlength' => 30]) ?>
+                                'onchange'=>'
+                                    $.post( "index.php?r=address/subdivision&id='.'"+$(this).val(), function( data ) {
+                                        $( "select#address-state" ).html( data );
+                                    });'
+
+                            ]); ?>
+
+    <?= $form->field($model, 'state')->dropDownList($model->getState( $model->iso ), ['prompt'=>'Select State']); ?>
 
     <?= $form->field($model, 'street')->textInput(['maxlength' => 30]) ?>
 

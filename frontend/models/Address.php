@@ -80,7 +80,7 @@ class Address extends \yii\db\ActiveRecord
             'person_id' => 'Person ID',
             'live' => 'Live',
             'type' => 'Type',
-            'iso' => 'Iso',
+            'iso' => 'Country',
             'state' => 'State',
             'street' => 'Street',
             'city' => 'City',
@@ -107,6 +107,47 @@ class Address extends \yii\db\ActiveRecord
 
         return $qResult['person_id'];
     }
+
+
+    public function getCountries()
+    {
+        $sql = "SELECT iso, country FROM country;";
+
+        $qResult =  \Yii::$app->db->createCommand($sql)->queryAll();
+
+        $countries=[];
+
+        foreach ($qResult as $value) {
+            $countries[$value['iso']] = $value['country'];
+        }
+
+        return $countries;
+
+    }
+
+
+    public function getState($id) {
+
+        $sql = "SELECT subdivision FROM subdivision WHERE iso = '" . $id . "'";
+
+        $qResult =  \Yii::$app->db->createCommand($sql)->queryAll();
+
+        $data=[];
+
+        foreach ($qResult as $value) {
+            $data[$value['subdivision']] = $value['subdivision'];
+        }
+
+        return $data;
+
+/*
+        $data=\app\models\City::find()
+            ->where(['state_name'=>$city_id])
+            ->select(['id','city_name'])->asArray()->all();
+*/
+ //       return $data;
+    }
+
 
 
     /**

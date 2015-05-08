@@ -27,6 +27,18 @@ class AddressController extends Controller
         ];
     }
 
+
+    public function actionSubdivision($id)
+    {
+        $sql = "SELECT subdivision FROM subdivision WHERE iso = '" . $id . "'";
+        $qResult =  \Yii::$app->db->createCommand($sql)->queryAll();
+
+        foreach ($qResult as $value) {
+            echo "<option value='". $value['subdivision']  ."'>". $value['subdivision'] ."</option>";
+        }
+    }
+
+
     /**
      * Lists all Address models.
      * @return mixed
