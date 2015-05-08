@@ -67,8 +67,9 @@ AppAsset::register($this);
 
     <footer class="footer">
         <div class="container">
-        <p class="pull-left">&copy; IAN 2015 </p>
-        <p class="pull-right"><?= $_SERVER['REMOTE_ADDR'] ?></p>
+        <p class="pull-left">&copy; IAN 2015</p>
+        <p class="pull-right"><?= date("r") ?> IP Address: <?= $_SERVER['REMOTE_ADDR'] ?></p>
+
         </div>
     </footer>
 
