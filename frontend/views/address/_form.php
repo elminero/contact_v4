@@ -17,6 +17,8 @@ use yii\base\InvalidConfigException;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+use kartik\select2\Select2;
+
 /* @var $this yii\web\View */
 /* @var $model frontend\models\Address */
 /* @var $form yii\widgets\ActiveForm */
@@ -45,7 +47,22 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'street')->textInput(['maxlength' => 30]) ?>
 
-    <?= $form->field($model, 'city')->textInput(['maxlength' => 30]) ?>
+    <?php echo $form->field($model, 'city')->textInput(['maxlength' => 30]) ?>
+
+    <?php
+        /*
+        echo
+        $form->field($model, 'city')->widget(Select2::classname(), [
+ //       'data' => ['New York' => 'New York', 'California' => 'California'],
+        'data' => $model->getCity(),
+        'language' => 'en',
+        'options' => ['placeholder' => 'Select a city ...'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ]);
+        */
+        ?>
 
     <?= $form->field($model, 'postal_code')->textInput(['maxlength' => 30]) ?>
 

@@ -74,6 +74,7 @@ class Person extends \yii\db\ActiveRecord
             'date_updated' => 'Date Updated',
             'ip_created' => 'Ip Created',
             'ip_updated' => 'Ip Updated',
+            'search' => 'Search'
         ];
     }
 
@@ -155,6 +156,32 @@ class Person extends \yii\db\ActiveRecord
 
         return  \Yii::$app->db->createCommand($sql)->queryAll();
     }
+
+
+    public function getNames() {
+        $sql = "SELECT id, last_name, first_name, middle_name, alias_name
+                FROM person
+                WHERE person.live = 1";
+
+        $qResult =  \Yii::$app->db->createCommand($sql)->queryAll();
+
+        $data=[];
+
+        foreach ($qResult as $value) {
+            $data[$value['id']] = $value['first_name'] . " " . $value['middle_name'] . " " . $value['last_name'] . " ";
+
+            if( $value['alias_name'] ) {
+                $data[$value['id']] .= " aka: " . $value['alias_name'];
+            }
+
+
+
+
+        }
+
+        return $data;
+    }
+
 
 
     /**

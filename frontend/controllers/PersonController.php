@@ -47,6 +47,26 @@ class PersonController extends Controller
     }
 
 
+    public function actionSearch()
+    {
+        if( Yii::$app->user->can('person-search') ) {
+
+            $model = new Person();
+
+            if (  ( $model->load(Yii::$app->request->post()) ) && ($_POST["Person"]["id"]) ) {
+
+                return $this->redirect(['profile', 'id' => $_POST["Person"]["id"] ]);
+
+            } else {
+
+                return $this->render('search', ['model' => $model]);
+            }
+        }else {
+            throw new ForbiddenHttpException;
+        }
+    }
+
+
     public function actionRemove($id)
     {
         if( Yii::$app->user->can('person-remove') ) {
@@ -115,6 +135,7 @@ class PersonController extends Controller
             throw new ForbiddenHttpException;
         }
     }
+
 
     /**
      * Lists all Person models.

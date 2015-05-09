@@ -139,14 +139,49 @@ class Address extends \yii\db\ActiveRecord
         }
 
         return $data;
-
-/*
-        $data=\app\models\City::find()
-            ->where(['state_name'=>$city_id])
-            ->select(['id','city_name'])->asArray()->all();
-*/
- //       return $data;
     }
+
+
+    public function getCity()
+    {
+        $sql = "SELECT city FROM us_zip_code
+                WHERE zip_code_type = 'STANDARD'
+                AND decommisioned_ = 'false' AND state = 'CA'
+                LIMIT 500";
+
+        $qResult =  \Yii::$app->db->createCommand($sql)->queryAll();
+
+        $data=[];
+
+        foreach ($qResult as $value) {
+            $data[$value['city']] = $value['city'];
+        }
+
+        return $data;
+
+    }
+
+
+    /*
+     *
+     * CREATE TABLE us_zip_code(
+  id INTEGER(5) NOT NULL PRIMARY KEY
+, zip_code INTEGER(5)
+, zip_code_type VARCHAR(8)
+, city VARCHAR(28)
+, state VARCHAR(2)
+, location_type VARCHAR(14)
+, latitude NUMERIC(6,2)
+, longitude NUMERIC(7,2)
+, location VARCHAR(52)
+, decommisioned_ VARCHAR(5)
+);
+
+select * from us_zip_code where zip_code = 12401;
+select * from us_zip_code where city = 'WOODSTOCK';
+     *
+     *
+     */
 
 
 
